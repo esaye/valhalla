@@ -41,7 +41,21 @@ namespace valhalla {
       multi_modal_astar.set_interrupt(interrupt);
       return &multi_modal_astar;
     }
+/**
+    // If the origin has date_time set use timedep_forward method.
+    // TODO - what to do if the route is long?
+    if (origin.has_date_time()) {
+      timedep_forward.set_interrupt(interrupt);
+      return &timedep_forward;
+    }
 
+    // If the destination has date_time set use timedep_reverse method.
+    // TODO - what to do if the route is long?
+    if (destination.has_date_time()) {
+      timedep_reverse.set_interrupt(interrupt);
+      return &timedep_reverse;
+    }
+**/
     // Use A* if any origin and destination edges are the same - otherwise
     // use bidirectional A*. Bidirectional A* does not handle trivial cases
     // with oneways.
@@ -82,6 +96,7 @@ namespace valhalla {
 
         path_algorithm->Clear();
         cost->set_pass(1);
+        // TODO - also include the timedep methods
         bool using_astar = (path_algorithm == &astar);
         float relax_factor = using_astar ? 16.0f : 8.0f;
         float expansion_within_factor = using_astar ? 4.0f : 2.0f;
